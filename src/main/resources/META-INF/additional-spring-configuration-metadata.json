@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "TOKEN.KEY",
+    "type": "java.lang.String",
+    "description": "A description for 'TOKEN.KEY'"
+  },
+  {
+    "name": "TOKEN.KEY",
+    "type": "java.lang.String",
+    "description": "A description for 'TOKEN.KEY'"
+  },
+  {
+    "name": "jwt.key",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.key'"
+  }
+]}
