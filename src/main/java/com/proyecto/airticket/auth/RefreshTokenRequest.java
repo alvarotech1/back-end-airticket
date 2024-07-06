@@ -1,14 +1,12 @@
 package com.proyecto.airticket.auth;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class AuthResponse {
-	String token;
+@NoArgsConstructor
+public class RefreshTokenRequest {
+	 private String token;
 }
