@@ -1,7 +1,6 @@
 package com.proyecto.airticket.auth;
 
 import java.time.Instant;
-import java.util.Optional;
 
 import com.proyecto.airticket.user.Users;
 

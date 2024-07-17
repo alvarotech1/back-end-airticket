@@ -33,7 +33,7 @@ public class AuthService {
 			String token = jwtService.getToken(user);
 			RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getUsername());
 		return JwtAuthResponse.builder()
-				.token(refreshToken.getToken())
+				.refreshToken(refreshToken.getToken())
 				.accessToken(token)
 				.build();
 		}else {
@@ -41,10 +41,20 @@ public class AuthService {
 		}
 	}
 
-	public JwtAuthResponse register(RegisterRequest request) {
+	public void register(RegisterRequest request) {
+		
+		 if (userRepository.existsByUsername(request.getUsername())) {
+	            throw new IllegalArgumentException("Username already exists.");
+	        }
+
+	        if (userRepository.existsByEmail(request.getEmail())) {
+	            throw new IllegalArgumentException("Email already exists.");
+	        }
+		
 		Users user = Users.builder()
 					.username(request.getUsername())
 					.password(passwordEncoder.encode(request.getPassword()))
+					.email(request.getEmail())
 					.firstname(request.getFirstname())
 					.lastname(request.getLastname())
 					.country(request.getCountry())
@@ -53,10 +63,7 @@ public class AuthService {
 		
 		
 		userRepository.save(user);
-		
-		return JwtAuthResponse.builder()
-				.token(jwtService.getToken(user))
-				.build();
+	
 	}
 
 }
