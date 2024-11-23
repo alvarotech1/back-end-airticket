@@ -26,10 +26,15 @@ public class AuthController {
 	
 	
 	@PostMapping("/login")
-	public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginRequest request) {
+	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 		
-		return ResponseEntity.ok(authService.login(request));
+		try {
+			return ResponseEntity.ok(authService.login(request));
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
+	
 
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody RegisterRequest request){

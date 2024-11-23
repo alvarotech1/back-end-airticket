@@ -9,8 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.proyecto.airticket.jwt.JwtService;
+import com.proyecto.airticket.repositories.RoleRepository;
 import com.proyecto.airticket.repositories.UserRepository;
-import com.proyecto.airticket.user.Role;
+import com.proyecto.airticket.role.RoleEnum;
 import com.proyecto.airticket.user.Users;
 
 import lombok.RequiredArgsConstructor;
@@ -24,11 +25,12 @@ public class AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
 	private final RefreshTokenService refreshTokenService;
+	private final RoleRepository roleRepository;
 
 	public JwtAuthResponse login(LoginRequest request) {
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 		UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
-	
+		
 		if(authentication.isAuthenticated()) {
 			String token = jwtService.getToken(user);
 			RefreshToken refreshToken = refreshTokenService.createRefreshToken(request.getUsername());
@@ -40,7 +42,7 @@ public class AuthService {
 	        throw new UsernameNotFoundException("invalid user request..!!");
 		}
 	}
-
+	
 	public void register(RegisterRequest request) {
 		
 		 if (userRepository.existsByUsername(request.getUsername())) {
@@ -58,7 +60,7 @@ public class AuthService {
 					.firstname(request.getFirstname())
 					.lastname(request.getLastname())
 					.country(request.getCountry())
-					.role(Role.USER)
+					.role(roleRepository.findByName(RoleEnum.USER))
 					.build();
 		
 		

@@ -11,6 +11,8 @@ import com.proyecto.airticket.user.Users;
 public interface UserRepository extends JpaRepository<Users, Integer> {
 
 	Optional<Users> findByUsername(String username);
+	Optional<Users> findById(Integer id);
+	
 	boolean existsByUsername(String username);
 	boolean existsByEmail(String email);
 
