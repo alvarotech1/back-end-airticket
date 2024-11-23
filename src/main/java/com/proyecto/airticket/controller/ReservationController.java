@@ -1,7 +1,6 @@
 package com.proyecto.airticket.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.airticket.dto.ReservationRequestDTO;
 import com.proyecto.airticket.dto.ReservationResponseDTO;
+import com.proyecto.airticket.exceptions.UserNotFoundException;
 import com.proyecto.airticket.repositories.UserRepository;
 import com.proyecto.airticket.reservation.Reservation;
 import com.proyecto.airticket.service.ReservationService;
@@ -30,16 +30,17 @@ public class ReservationController {
 
     
     @PostMapping("/create")
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequestDTO request) {
+    public ResponseEntity<ReservationResponseDTO> createReservation(@RequestBody ReservationRequestDTO request) {
        
         Users user = userRepository.findById(request.getUserId())
-                                   .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                                   .orElseThrow(() -> new UserNotFoundException("User not found"));
 
    
         Reservation reservation = reservationService.createReservation(user, request.getFlightId(), request.getSeatId());
-
         
-        return ResponseEntity.status(201).body(reservation);
+        ReservationResponseDTO response = new ReservationResponseDTO(reservation);
+        
+        return ResponseEntity.status(201).body(response);
     }
 
     
@@ -49,7 +50,7 @@ public class ReservationController {
 
         // convierte las reservas a DTO
         List<ReservationResponseDTO> response = reservations.stream()
-                .map(ReservationResponseDTO::new)
+                .map(reservation -> new ReservationResponseDTO(reservation, true))
                 .toList();
 
         return ResponseEntity.ok(response);
