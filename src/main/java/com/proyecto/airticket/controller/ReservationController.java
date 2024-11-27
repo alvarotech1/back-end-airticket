@@ -50,7 +50,7 @@ public class ReservationController {
 
         // convierte las reservas a DTO
         List<ReservationResponseDTO> response = reservations.stream()
-                .map(reservation -> new ReservationResponseDTO(reservation, true))
+                .map(reservation -> new ReservationResponseDTO(reservation))
                 .toList();
 
         return ResponseEntity.ok(response);

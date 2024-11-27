@@ -1,5 +1,6 @@
 package com.proyecto.airticket.service;
 
+import com.proyecto.airticket.exceptions.FlightNotFoundException;
 import com.proyecto.airticket.flight.Flight;
 import com.proyecto.airticket.repositories.FlightRepository;
 
@@ -21,6 +22,6 @@ public class FlightService {
 
     public Flight getFlightById(Integer id) {
         return flightRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Flight not found"));
+                .orElseThrow(() -> new FlightNotFoundException("Flight not found"));
     }
 }

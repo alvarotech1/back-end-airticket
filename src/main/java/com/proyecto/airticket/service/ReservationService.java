@@ -26,11 +26,11 @@ public class ReservationService {
     public Reservation createReservation(Users user, Integer flightId, Integer seatId) {
 
         Flight flight = flightService.getFlightById(flightId);
-
+        
     
         Seat seat = seatService.reserveSeat(seatId);
-
-     
+        
+        
         Reservation reservation = Reservation.builder()
                 .user(user)                
                 .flight(flight)               
