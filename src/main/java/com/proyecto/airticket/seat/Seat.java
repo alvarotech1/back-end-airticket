@@ -27,9 +27,9 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String seatNumber; // Ejemplo: "1A", "12C"
-    private String seatClass;  // Ejemplo: "Economy", "Business"
-    private boolean isAvailable; // Disponible o no
+    private String seatNumber;
+    private String seatClass;  
+    private boolean isAvailable; 
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "flight_id", nullable = false)

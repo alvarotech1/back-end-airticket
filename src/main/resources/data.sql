@@ -30,11 +30,17 @@ VALUES
 ('Moscow Sheremetyevo', 'Moscow', 'Russia');
 
 
--- Insertar vuelos
+
 -- Insertar vuelos
 INSERT INTO flights (departure_time, arrival_time, origin_id, destination_id, price, available_seats) 
 VALUES
 ('2024-12-26 06:00:00', '2024-12-26 09:00:00', 
+    (SELECT id FROM airports WHERE name = 'Heathrow' LIMIT 1), 
+    (SELECT id FROM airports WHERE name = 'Charles de Gaulle' LIMIT 1), 150.00, 200),
+('2024-12-26 13:00:00', '2024-12-26 16:30:00', 
+    (SELECT id FROM airports WHERE name = 'Heathrow' LIMIT 1), 
+    (SELECT id FROM airports WHERE name = 'Charles de Gaulle' LIMIT 1), 150.00, 200),
+('2024-12-26 15:00:00', '2024-12-26 18:30:00', 
     (SELECT id FROM airports WHERE name = 'Heathrow' LIMIT 1), 
     (SELECT id FROM airports WHERE name = 'Charles de Gaulle' LIMIT 1), 150.00, 200),
 ('2024-12-26 07:30:00', '2024-12-26 10:30:00', 

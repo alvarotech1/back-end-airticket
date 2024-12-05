@@ -3,6 +3,7 @@ package com.proyecto.airticket.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/api/seats")
 @AllArgsConstructor
+@CrossOrigin
 public class SeatController {
 
 	private final SeatService seatService;

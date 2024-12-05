@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.proyecto.airticket.user.Users;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -23,17 +25,18 @@ public class JwtService {
 	private String SECRET_KEY;
 	
 	
-	public String getToken(UserDetails user) {
+	public String getToken(Users user) {
 		return getToken(new HashMap<>(), user);
 	}
 	
-	public String getToken(Map<String,Object> extraClaims, UserDetails user) {
+	public String getToken(Map<String,Object> extraClaims, Users user ) {
 		return Jwts
 				.builder()
 				.claims(extraClaims)
+				.claim("userId", user.getId())
 				.subject(user.getUsername())
 				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis()+1000*60*1))
+				.expiration(new Date(System.currentTimeMillis()+1000*60*2))
 				.signWith(getKey())
 				.compact();
 	}

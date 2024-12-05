@@ -30,4 +30,7 @@ public class SeatService {
         seat.setAvailable(false);
         return seatRepository.save(seat);
     }
+    public Seat saveSeat(Seat seat) {
+        return seatRepository.save(seat);
+    }
 }

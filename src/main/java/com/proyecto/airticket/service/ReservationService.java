@@ -2,9 +2,12 @@ package com.proyecto.airticket.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.proyecto.airticket.exceptions.ReservationNotFoundException;
 import com.proyecto.airticket.flight.Flight;
 import com.proyecto.airticket.repositories.ReservationRepository;
 import com.proyecto.airticket.reservation.Reservation;
@@ -46,5 +49,35 @@ public class ReservationService {
    
     public List<Reservation> getUserReservations(Integer userId) {
         return reservationRepository.findByUserId(userId);
+    }
+    
+    public Optional<Reservation> getReservationById(Integer reservationId) {
+        return reservationRepository.findById(reservationId);
+    }
+    @Transactional
+    public void cancelReservation(Integer reservationId) {
+        // Encuentra la reserva
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ReservationNotFoundException("Reservation not found"));
+
+        // Actualiza los asientos asociados con la reserva
+        Seat seat = reservation.getSeat();
+        seat.setAvailable(true);  // Marca el asiento como disponible
+        seatService.saveSeat(seat);  // Guarda el estado actualizado del asiento
+
+        // Actualiza la disponibilidad de los asientos en el vuelo
+        Flight flight = reservation.getFlight();
+        flight.setAvailableSeats(flight.getAvailableSeats() + 1);
+        flightService.saveFlight(flight);  // Guarda el vuelo con el nuevo número de asientos disponibles
+
+        // Elimina la reserva
+        reservationRepository.delete(reservation);
+    }
+
+    // Obtener el ID del vuelo asociado con una reserva
+    public Integer getFlightIdByReservation(Integer reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+        return reservation.getFlight().getId();
     }
 }

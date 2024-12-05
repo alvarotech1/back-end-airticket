@@ -1,13 +1,15 @@
 package com.proyecto.airticket.controller;
 
-import com.proyecto.airticket.exceptions.FlightNotFoundException;
-import com.proyecto.airticket.exceptions.SeatNotAvailableException;
-import com.proyecto.airticket.exceptions.SeatNotFoundException;
-import com.proyecto.airticket.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.proyecto.airticket.exceptions.FlightNotFoundException;
+import com.proyecto.airticket.exceptions.ReservationNotFoundException;
+import com.proyecto.airticket.exceptions.SeatNotAvailableException;
+import com.proyecto.airticket.exceptions.SeatNotFoundException;
+import com.proyecto.airticket.exceptions.UserNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -30,5 +32,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SeatNotFoundException.class)
     public ResponseEntity<String> handleSeatNotFoundException(SeatNotFoundException ex){
     	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+    @ExceptionHandler(ReservationNotFoundException.class)
+    public ResponseEntity<String> handleReservationNotFoundException(ReservationNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

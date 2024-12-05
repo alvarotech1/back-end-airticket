@@ -8,4 +8,6 @@ import com.proyecto.airticket.auth.RefreshToken;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Integer> {
 	Optional<RefreshToken> findByToken(String token);
+	
+	Optional<RefreshToken> findByUsersId(Integer id);
 }

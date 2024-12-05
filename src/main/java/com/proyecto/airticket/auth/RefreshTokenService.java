@@ -32,28 +32,35 @@ public class RefreshTokenService {
     
 
     public RefreshToken createRefreshToken(String username){
-    	 Users user = userRepository.findByUsername(username)
-                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
-    	 
-    	 String token = UUID.randomUUID().toString();
-         String hashedToken = null;
-         try {
-             hashedToken = hashToken(token);
-         } catch (NoSuchAlgorithmException e) {
-             throw new RuntimeException("Error generating hash for token", e);
-         }
-    	 
-        RefreshToken refreshToken = RefreshToken.builder()
-                .users(user)
-                .token(hashedToken)
-                .expiryDate(Instant.now().plusMillis(600000))
-                .build();
-        refreshTokenRepository.save(refreshToken);
+        Users user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
         
-     // Devuelve el token sin hashear
-        refreshToken.setToken(token);
-        return refreshToken;
-        
+        // Verificar si el usuario ya tiene un token activo
+        Optional<RefreshToken> existingToken = refreshTokenRepository.findByUsersId(user.getId());
+        if (existingToken.isPresent()) {
+            // Si ya tiene un token, podemos actualizar el token existente o eliminarlo y crear uno nuevo
+            RefreshToken tokenToUpdate = existingToken.get();
+          
+            // Si decides actualizar el token:
+            tokenToUpdate.setExpiryDate(Instant.now().plusMillis(600000)); // Nueva fecha de expiración
+            refreshTokenRepository.save(tokenToUpdate);
+            
+            return tokenToUpdate;
+        } else {
+            // Si no tiene un token, creamos uno nuevo
+            String token = UUID.randomUUID().toString();
+          
+            RefreshToken refreshToken = RefreshToken.builder()
+                    .users(user)
+                    .token(token)
+                    .expiryDate(Instant.now().plusMillis(600000))
+                    .build();
+            refreshTokenRepository.save(refreshToken);
+
+            // Devuelve el token sin hashear
+            refreshToken.setToken(token);
+            return refreshToken;
+        }
     }
 
 
